@@ -20,29 +20,59 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
-      contents: read
+      contents: write
+    env:
+      VERSION: v10.2.3
     steps:
       - name: Checkout
         uses: tmknom/checkout-action@v1
 
-      - name: Setup
-        run: |
-          set -x
-          echo "Setup"
-
       - name: Exercise
         id: exercise
         uses: ./
+        with:
+          version: ${{ env.VERSION }}
 
       - name: Verify
-        env:
-          OUTCOME: ${{ steps.exercise.outcome }}
         run: |
           set -x
-          test "${OUTCOME}" = "success"
+          git ls-remote --tags origin "${VERSION}" | grep -q "refs/tags/${VERSION}"
 
       - name: Teardown
         if: ${{ always() }}
         run: |
           set -x
-          echo "Teardown"
+          git push origin "${VERSION}" --delete || true
+
+  test-major:
+    name: Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    env:
+      VERSION: v11.2.3
+      MAJOR_VERSION: v11
+    steps:
+      - name: Checkout
+        uses: tmknom/checkout-action@v1
+
+      - name: Exercise
+        id: exercise
+        uses: ./
+        with:
+          version: ${{ env.VERSION }}
+          major: true
+
+      - name: Verify
+        run: |
+          set -x
+          git ls-remote --tags origin "${VERSION}" | grep -q "refs/tags/${VERSION}"
+          git ls-remote --tags origin "${MAJOR_VERSION}" | grep -q "refs/tags/${MAJOR_VERSION}"
+
+      - name: Teardown
+        if: ${{ always() }}
+        run: |
+          set -x
+          git push origin "${VERSION}" --delete || true
+          git push origin "${MAJOR_VERSION}" --delete || true
