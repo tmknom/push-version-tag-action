@@ -1,23 +1,49 @@
-name: Rename me
+name: Push Version Tag
 description: |
-  Template repository for creating Composite Action with GitHub Actions.
+  Push the specified version to the repository as a Git tag.
 
   ## Usage
 
-  Write usage for your Composite Action.
-
   ```yaml
     steps:
-      - name: Template
-        uses: tmknom/template-composite-action@v0
+      - name: Push Version Tag
+        uses: tmknom/push-version-tag-action@v0
+        with:
+          version: v1.2.3
   ```
+
+inputs:
+  version:
+    required: true
+    description: Version to push as a Git tag.
+  major:
+    default: false
+    required: false
+    description: Whether to push the major version tag.
 
 runs:
   using: composite
 
   steps:
-    - name: Run
-      shell: bash
+    - name: Git Config
+      uses: tmknom/git-config-action@970621c4819d5a601bbac4a2bcf6f5f80d92a2e6 # v0.2.0
+
+    - name: Push version tag
+      env:
+        VERSION: ${{ inputs.version }}
       run: |
         set -x
-        echo "Write steps"
+        git tag --force --message "${VERSION}" "${VERSION}"
+        git push --force origin "${VERSION}"
+      shell: bash
+
+    - name: Push major version tag
+      if: ${{ inputs.major == 'true' }}
+      env:
+        VERSION: ${{ inputs.version }}
+      run: |
+        set -x
+        major="${VERSION%%.*}"
+        git tag --force --message "${VERSION}" "${major}"
+        git push --force origin "${major}"
+      shell: bash
