@@ -1,26 +1,29 @@
-# template-composite-action
+# push-version-tag-action
 
-Template repository for Composite Action.
+Push version tag to the repository.
 
 <!-- actdocs start -->
 
 ## Description
 
-Template repository for creating Composite Action with GitHub Actions.
+Push the specified version to the repository as a Git tag.
 
 ## Usage
 
-Write usage for your Composite Action.
-
 ```yaml
   steps:
-    - name: Template
-      uses: tmknom/template-composite-action@v0
+    - name: Push Version Tag
+      uses: tmknom/push-version-tag-action@v0
+      with:
+        version: v1.2.3
 ```
 
 ## Inputs
 
-N/A
+| Name | Description | Default | Required |
+| :--- | :---------- | :------ | :------: |
+| version | Version to push as a Git tag. | n/a | yes |
+| major | Whether to push the major version tag. | `false` | no |
 
 ## Outputs
 
@@ -30,7 +33,9 @@ N/A
 
 ## Permissions
 
-N/A
+| Scope    | Access |
+| :------- | :----- |
+| contents | write  |
 
 ## FAQ
 
@@ -48,4 +53,4 @@ See [GitHub Releases][releases].
 
 Apache 2 Licensed. See [LICENSE](LICENSE) for full details.
 
-[releases]: https://github.com/tmknom/template-composite-action/releases
+[releases]: https://github.com/tmknom/push-version-tag-action/releases
