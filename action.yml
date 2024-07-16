@@ -32,9 +32,11 @@ runs:
       env:
         VERSION: ${{ inputs.version }}
       run: |
+        echo "::group::Push version tag"
         set -x
         git tag --force --message "${VERSION}" "${VERSION}"
         git push --force origin "${VERSION}"
+        echo "::endgroup::"
       shell: bash
 
     - name: Push major version tag
@@ -42,8 +44,10 @@ runs:
       env:
         VERSION: ${{ inputs.version }}
       run: |
+        echo "::group::Push major version tag"
         set -x
         major="${VERSION%%.*}"
         git tag --force --message "${VERSION}" "${major}"
         git push --force origin "${major}"
+        echo "::endgroup::"
       shell: bash
