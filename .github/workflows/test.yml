@@ -25,7 +25,9 @@ jobs:
       VERSION: v10.2.3
     steps:
       - name: Checkout
-        uses: tmknom/checkout-action@v1
+        uses: tmknom/secure-checkout-action@v1
+        with:
+          persist-credentials: true
 
       - name: Exercise
         id: exercise
@@ -55,7 +57,9 @@ jobs:
       MAJOR_VERSION: v11
     steps:
       - name: Checkout
-        uses: tmknom/checkout-action@v1
+        uses: tmknom/secure-checkout-action@v1
+        with:
+          persist-credentials: true
 
       - name: Exercise
         id: exercise
